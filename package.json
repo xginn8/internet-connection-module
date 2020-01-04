@@ -1,0 +1,46 @@
+{
+  "name": "internet-connection-module",
+  "version": "0.0.0",
+  "description": "Confirm networking requirements from a balena device",
+  "main": "build/index.js",
+  "scripts": {
+    "check": "tsc --pretty --noEmit --diagnostics --project ./tsconfig.json",
+    "check:dev": "tsc --pretty --noEmit --diagnostics --project ./tsconfig.dev.json",
+    "lint": "resin-lint --typescript lib tests",
+    "lint:fix": "prettier --config ./node_modules/resin-lint/config/.prettierrc --write \"{lib,test,typings}/**/*.ts\"",
+    "test": "npm run build && mocha -r ts-node/register \"tests/**/*.spec.ts\"",
+    "build": "tsc --project . && copyfiles -e 'lib/**/*.ts' 'lib/**/*' \"$(jq -r .compilerOptions.outDir <tsconfig.json)\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run lint"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --config ./node_modules/resin-lint/config/.prettierrc --write",
+      "resin-lint --typescript",
+      "git add"
+    ]
+  },
+  "author": "Matthew McGinn <matthew@balena.io>",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "copyfiles": "^2.1.1",
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
+    "mocha": "^6.2.2",
+    "prettier": "^1.19.1",
+    "resin-lint": "^3.1.1",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.4"
+  }
+}
